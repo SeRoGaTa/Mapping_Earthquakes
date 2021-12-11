@@ -12,13 +12,25 @@
 //     accessToken: API_KEY
 //   });
 
-let night_nav = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+// let night_nav = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-night-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+//     attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+//     maxZoom: 18,
+//     accessToken: API_KEY
+//   });
+
+// let day_nav = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-day-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+//     attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
+//     maxZoom: 18,
+//     accessToken: API_KEY
+//   });
+
+let street = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     accessToken: API_KEY
   });
 
-let day_nav = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-day-v1/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+let satelite = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data © <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery (c) <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
     accessToken: API_KEY
@@ -26,22 +38,22 @@ let day_nav = L.tileLayer('https://api.mapbox.com/styles/v1/mapbox/navigation-da
 
   // Create a base layer that holds both maps.
   let baseMaps = {
-    "Day Navigation": day_nav,
-    "Night Navigation": night_nav
+    "Streets": street,
+    "Satellite Streets": satelite
   };
   
   // Create the map object with a center and zoom level.
   let map = L.map("mapid", {
-    center: [44.0, -80.0],
-    zoom: 3,
-    layers: [night_nav]
+    center: [43.7, -79.3],
+    zoom: 11,
+    layers: [satelite]
   });
 
 // Pass our map layers into our layers control and add the layers control to the map.
 L.control.layers(baseMaps).addTo(map);
 
 // Accessing the Toronto airline routes GeoJSON URL.
-let torontoData = "https://raw.githubusercontent.com/SeRoGaTa/Mapping_Earthquakes/Mapping_GeoJSON_Linestrings/Mapping_GeoJSON_Linestrings/torontoRoutes.json";
+let torontoHoods = "https://raw.githubusercontent.com/SeRoGaTa/Mapping_Earthquakes/Mapping_GeoJSON_Polygons/Mapping_GeoJSON_Polygons/torontoNeighborhoods.json";
 
 // Grabbing our GeoJSON data.
 // L.geoJSON(sanFranAirport, {
@@ -57,14 +69,14 @@ let torontoData = "https://raw.githubusercontent.com/SeRoGaTa/Mapping_Earthquake
 
 
 // Grabbing our GeoJSON data.
-d3.json(torontoData).then(function(data) {
+d3.json(torontoHoods).then(function(data) {
   console.log(data);
   // Creating a GeoJSON layer with the retrieved data.
   L.geoJSON(data,{
     style: function (feature) {
-      return {color: "#ffffa1", weight: 2};
+      return {color: "blue", weight: 1, fillColor: "yellow"};
     }
   }).bindPopup(function (layer){
-    return ("<h2>Airline: " + layer.feature.properties.airline + "</h2> <hr> <h3>Destination: " + layer.feature.properties.dst + "</h3>");
+    return ("<h3>Neirborhood: " + layer.feature.properties.AREA_NAME + "</h3>");
   }).addTo(map);;
 })
